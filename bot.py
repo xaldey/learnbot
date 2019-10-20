@@ -11,7 +11,7 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
                     filename='bot.log'
                     )
 
-def greet_user(bot, upgrade):
+def greet_user(bot, update):
     emo = emojize(choice(settings.USER_EMOJI), use_aliases = True)
     text = 'Привет {}'.format(emo)
     logging.info(text)
@@ -30,15 +30,13 @@ def send_rhino_picture(bot, update):
 
 
 def main():
-    mybot = Updater(settings.API_KEY, request_kwargs=settins.PROXY)
+    mybot = Updater(settings.API_KEY, request_kwargs=settings.PROXY)
 
     logging.info('Бот запускается')
 
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler('start', greet_user))
     dp.add_handler(CommandHandler('rhino', send_rhino_picture))
-
-
 
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
