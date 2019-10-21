@@ -44,6 +44,7 @@ decorator==4.4.0
 defusedxml==0.6.0
 distributed==2.1.0
 docutils==0.14
+emoji==0.5.4
 entrypoints==0.3
 ephem==3.7.7.0
 et-xmlfile==1.0.1
