@@ -11,7 +11,8 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
                     )
 
 def main():
-    mybot = Updater(settings.API_KEY, request_kwargs=settings.PROXY)
+    mybot = Updater(settings.API_KEY, request_kwargs=settings.PROXY) #версия с прокси
+    #mybot = Updater(settings.API_KEY) #версия без прокси
 
     logging.info('Бот запускается')
 
@@ -22,6 +23,8 @@ def main():
     dp.add_handler(RegexHandler('^(Сменить аватарку)$', change_avatar, pass_user_data=True))
     dp.add_handler(MessageHandler(Filters.contact, get_contact, pass_user_data=True))
     dp.add_handler(MessageHandler(Filters.location, get_location, pass_user_data=True))
+    dp.app_handler(MessageHandler(Filters.photo, check_user_photo, pass_user_data=True))
+
     dp.add_handler(MessageHandler(Filters.text, talk_to_me, pass_user_data=True))
 
     mybot.start_polling()
