@@ -17,17 +17,19 @@ def get_keyboard():
     contact_button = KeyboardButton('Прислать контакты', request_contact=True)
     location_button = KeyboardButton('Прислать координаты', request_location=True)
     my_keyboard = ReplyKeyboardMarkup([
-                                        ['Прислать носорожку','Сменить аватарку'],
-                                        [contact_button, location_button]
-                                    ], resize_keyboard=True
-                                    )
+        ['Прислать носорожку','Сменить аватарку'],
+        [contact_button, location_button]
+    ], resize_keyboard=True)
     return my_keyboard
 
 def is_rhino(file_name):
+    #в начале носорога НЕТ
     image_has_rhino = False
     app = ClarifaiApp(api_key=settings.CLARIFAI_API_KEY)
     model = app.public_models.general_model
+    #разбираем ответ Кларифая
     response = model.predict_by_filename(file_name, max_concepts=5)
+    #если есть код 10000 то ищем наличие слова НОСОРОГ ('rhinoceros') и возвращаем ТРУ
     if response['status']['code'] == 10000:
         for concept in response['outputs'][0]['data']['concepts']:
             if concept['name'] == 'rhinoceros':
@@ -35,4 +37,5 @@ def is_rhino(file_name):
     return image_has_rhino
     
 if __name__ == "__main__":
-    print(is_rhino('images/rhino_not.jpg'))
+    print(is_rhino)
+    
