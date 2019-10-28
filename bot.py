@@ -11,8 +11,9 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
                     )
 
 def main():
+    # mybot = Updater(settings.API_KEY, request_kwargs=settings.PROXY) #версия с прокси
     mybot = Updater(settings.API_KEY, request_kwargs=settings.PROXY) #версия с прокси
-    #mybot = Updater(settings.API_KEY) #версия без прокси
+    # mybot = Updater(settings.API_KEY) #версия без прокси
 
     logging.info('Бот запускается')
 
