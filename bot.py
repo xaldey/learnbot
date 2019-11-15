@@ -1,6 +1,8 @@
+# This Python file uses the following encoding: utf-8
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, RegexHandler, ConversationHandler
+from telegram.ext import messagequeue as mq
 
 from handlers import *
 import settings
@@ -10,14 +12,32 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
                     filename='bot.log'
                     )
 
+# Пишем функцию для работы бота
+def my_test(bot, job):
+    bot.sendMessage(chat_id=211751313, text="Пссс! Свежие носороги интересуют?")
+    job.interval += 5
+    if job.interval > 15:
+        bot.sendMessage(chat_id=211751313, text="Хрен тебе, крче, а не носороги, мазафака!")
+        job.schedule_removal()
+
+#Подписчики
+subscribers = set()
+
+
 def main():
     # mybot = Updater(settings.API_KEY, request_kwargs=settings.PROXY) #версия с прокси
     mybot = Updater(settings.API_KEY, request_kwargs=settings.PROXY) #версия с прокси
     # mybot = Updater(settings.API_KEY) #версия без прокси
 
+    mybot.bot._msg_queue = mq.MessageQueue()
+    mybot.bot._is_messages_queued_default = True
+
     logging.info('Бот запускается')
 
     dp = mybot.dispatcher
+
+    # mybot.
+    mybot.job_queue.run_repeating(send_updates, interval=5)
 
     anketa = ConversationHandler(
         entry_points=[RegexHandler('^(Заполнить анкету)$', anketa_start, pass_user_data=True)],
@@ -41,6 +61,10 @@ def main():
     dp.add_handler(RegexHandler('^(Сменить аватарку)$', change_avatar, pass_user_data=True))
     dp.add_handler(MessageHandler(Filters.contact, get_contact, pass_user_data=True))
     dp.add_handler(MessageHandler(Filters.location, get_location, pass_user_data=True))
+    dp.add_handler(CommandHandler('subscribe', subscribe))
+    dp.add_handler(CommandHandler('unsubscribe', unsubscribe))
+    dp.add_handler(CommandHandler('alarm', set_alarm, pass_args=True, pass_job_queue=True))
+
     #по другому никак хэндлер не прикручивался
     handler_photo = MessageHandler(Filters.photo, check_user_photo, pass_user_data=True)
     dp.add_handler(handler_photo)

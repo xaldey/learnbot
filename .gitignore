@@ -5,3 +5,4 @@ settings.py
 downloads/
 .directory
 images/
+.vscode/
