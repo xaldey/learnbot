@@ -6,12 +6,14 @@ from random import choice
 from telegram import ReplyKeyboardRemove, ReplyKeyboardMarkup, ParseMode
 from telegram.ext import ConversationHandler
 from telegram.ext import messagequeue as mq
-from utils import get_keyboard, get_user_emo, is_rhino
 
 from bot import subscribers
+from db import db, get_or_create_user
+from utils import get_keyboard, get_user_emo, is_rhino
 
 def greet_user(bot, update, user_data):
-    print(update.message.chat_id)
+    user = get_or_create_user(db, update.effective_user, update.message)
+    print(user, message)
     emo = get_user_emo(user_data)
     user_data['emo'] = emo
     text = 'Привет {}'.format(emo)
